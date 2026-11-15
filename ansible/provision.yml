@@ -1,0 +1,6 @@
+---
+- name: Provisionner l'infrastructure CI/CD
+  hosts: local
+  become: true
+  roles:
+    - docker
