@@ -1,0 +1,9 @@
+---
+kubectl_version: v1.33.1
+minikube_version: v1.36.0
+minikube_cpus: 2
+minikube_memory: 3072
+minikube_addons:
+  - metrics-server
+  - ingress
+minikube_base_image: kicbase/stable:v0.0.47
