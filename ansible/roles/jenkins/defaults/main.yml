@@ -1,0 +1,3 @@
+---
+jenkins_dir: /opt/jenkins
+jenkins_http_port: 8080

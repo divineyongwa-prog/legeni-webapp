@@ -1,0 +1,38 @@
+---
+- name: Installer kubectl
+  ansible.builtin.get_url:
+    url: "https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/amd64/kubectl"
+    dest: /usr/local/bin/kubectl
+    mode: "0755"
+
+- name: Installer minikube
+  ansible.builtin.get_url:
+    url: "https://storage.googleapis.com/minikube/releases/{{ minikube_version }}/minikube-linux-amd64"
+    dest: /usr/local/bin/minikube
+    mode: "0755"
+
+- name: Vérifier l'état de Minikube
+  ansible.builtin.command: minikube status
+  become: false
+  register: minikube_status
+  changed_when: false
+  failed_when: false
+
+- name: Démarrer Minikube
+  ansible.builtin.command: >-
+    minikube start --driver=docker --base-image={{ minikube_base_image }}
+    --cpus={{ minikube_cpus }} --memory={{ minikube_memory }}
+  become: false
+  when: "'host: Running' not in minikube_status.stdout"
+
+- name: Lister les addons
+  ansible.builtin.command: minikube addons list -o json
+  become: false
+  register: minikube_addons_state
+  changed_when: false
+
+- name: Activer les addons
+  ansible.builtin.command: "minikube addons enable {{ item }}"
+  become: false
+  loop: "{{ minikube_addons }}"
+  when: "'enabled' not in (minikube_addons_state.stdout | from_json)[item].Status"
