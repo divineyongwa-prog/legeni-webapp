@@ -83,7 +83,7 @@ pipeline {
             steps {
                 sh '''
                     docker run --rm -v trivy-cache:/root/.cache/ -v /var/run/docker.sock:/var/run/docker.sock \
-                        aquasec/trivy image --timeout 30m --exit-code 1 --severity CRITICAL --ignore-unfixed $IMAGE:$TAG
+                        aquasec/trivy image --skip-db-update --timeout 30m --exit-code 1 --severity CRITICAL --ignore-unfixed $IMAGE:$TAG
                 '''
             }
         }
